@@ -1,0 +1,42 @@
+.center {
+  text-align: center;
+}
+
+.margin {
+  margin: 20px;
+}
+
+.black {
+  color: black;
+}
+h2 {
+  text-align: center;
+}
+
+.total {
+  text-align: end;
+}
+
+.save {
+  float: right;
+}
+
+.margin {
+  margin: 20px;
+}
+
+.red {
+  color: red;
+}
+
+#big-special {
+  margin-left: 50px;
+}
+
+#special-ins {
+  margin-right: 20px;
+}
+
+#plu {
+  margin-right: 20px;
+}

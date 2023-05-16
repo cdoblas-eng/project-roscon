@@ -1,0 +1,203 @@
+<div class="container">
+  <div class="row">
+    <!-- Selector -->
+    <div class="col-xs-6">
+      <div class="margin">
+        <input
+          type="text"
+          placeholder="Teléfono/DNI"
+          class="form-control"
+          [(ngModel)]="telef"
+        />
+        <table class="table center">
+          <thead>
+            <tr>
+              <th scope="col" class="center" colspan="2">Grande</th>
+              <th scope="col" class="center" colspan="2">Pequeño</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><button (click)="addNataBig()">Nata</button></td>
+              <td><button>Sin relleno</button></td>
+              <td><button>Nata</button></td>
+              <td><button>Sin relleno</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <h3>Añadir roscón especial</h3>
+        <form #sizeForm="ngForm" (ngSubmit)="newSpecial(sizeForm)">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-4">
+                <label>Tamaño</label>
+                <input
+                  type="radio"
+                  id="small-special"
+                  name="special-size"
+                  value="small"
+                  ngModel
+                />Pequeño<input
+                  type="radio"
+                  id="big-special"
+                  name="special-size"
+                  value="big"
+                  ngModel
+                />Grande
+                <br />
+                <br />
+                <div>
+                  <table class="table-responsive-md center">
+                    <thead></thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div>
+                            <label for="speciall-ins">Relleno</label>
+                            <select name="special-ins" id="special-ins">
+                              <option value="nata">Nata</option>
+                              <option value="merengue">Merengue</option>
+                              <option value="chocolate">Chocolate</option>
+                              <option value="crema">Crema</option>
+                              <option value="cabello">Cabello de angel</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>
+                          <button
+                            class="btn btn-primary"
+                            (click)="special()"
+                            id="plu"
+                          >
+                            <i class="material-icons black">{{ symbol }}</i>
+                          </button>
+                        </td>
+                        <td>
+                          <div *ngIf="plus; else nop">
+                            <label for="speciall-ins-2">Relleno 2</label>
+                            <select name="special-ins-2" id="special-ins-2">
+                              <option value="empty">Sin relleno</option>
+                              <option value="merengue-2">Merengue</option>
+                              <option value="chocolate-2">Chocolate</option>
+                              <option value="crema-2">Crema</option>
+                              <option value="cabello-2">
+                                Cabello de angel
+                              </option>
+                            </select>
+                          </div>
+                          <ng-template #nop></ng-template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <br />
+                <br />
+                <button class="btn btn-primary">Añadir</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Carrito -->
+    <div class="col-xs-6">
+      <div class="margin">
+        <h2>Carrito</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Producto</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Añadir</th>
+              <th scope="col">Quitar uno</th>
+              <th scope="col">Quitar todos</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="prods.length > 0">
+            <tr *ngFor="let product of prods">
+              <td scope="row">{{ product.name }}</td>
+              <td>{{ product.quantity }}</td>
+              <td>
+                <button type="button" class="btn btn-link">
+                  <i class="material-icons black">add</i>
+                </button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-link">
+                  <i class="material-icons black">remove</i>
+                </button>
+              </td>
+              <td>
+                <button type="button" class="btn btn-link">
+                  <i class="material-icons red">delete</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="total">Total: {{ total }}</p>
+
+        <button class="btn btn-primary save" (click)="send()">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{ display: displayStyle }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Pedido realizado</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="closePopup()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{ display: displayStyleError }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Error</h4>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="closePopupError()"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <label id="example-radio-group-label">Pick your favorite season</label>
+<mat-radio-group
+  aria-labelledby="example-radio-group-label"
+  class="example-radio-group"
+  [(ngModel)]="favoriteSeason">
+  <mat-radio-button class="example-radio-button" *ngFor="let season of seasons" [value]="season">
+    {{season}}
+  </mat-radio-button>
+</mat-radio-group>
+<div>Your favorite season is: {{favoriteSeason}}</div> -->
