@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { Product } from '../products';
+import { products } from '../products';
+import { Type } from '../products';
+
 
 @Component({
   selector: 'app-panel',
@@ -55,13 +58,26 @@ export class PanelComponent {
 
   addNataBig() {
     //Check if it is in products
-    let p: Product = {
-      id: 1,
-      name: 'Roscón grande nata',
-      quantity: 1,
-      price: 18,
-    };
-    this.prods.push(p);
+
+    this.prods.push(products[0]);
+    this.totals();
+  }
+  addSinBig() {
+    //Check if it is in products
+
+    this.prods.push(products[0]);
+    this.totals();
+  }
+  addNataSmall() {
+    //Check if it is in products
+
+    this.prods.push(products[0]);
+    this.totals();
+  }
+  addSinSmall() {
+    //Check if it is in products
+
+    this.prods.push(products[0]);
     this.totals();
   }
 
