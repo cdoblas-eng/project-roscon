@@ -4,6 +4,8 @@ import { NgForm } from '@angular/forms';
 import { Product } from '../products';
 import { products } from '../products';
 import { Type } from '../products';
+import { Fill } from '../products';
+import { Size } from '../products';
 
 @Component({
   selector: 'app-panel',
@@ -19,17 +21,23 @@ export class PanelComponent {
   main: boolean = false;
   displayStyle: string = 'none';
   displayStyleError: string = 'none';
-  specialSize: string = '';
-  //type: Type = Type.GR_NATA;
   Type = Type;
-  //products = products
+  //Valores de enumerados
+  fillValues = Object.values(Fill);
+  sizeValues = Object.values(Size);
+  //Atributos de roscon especial
+  specialSize: Size = Size.GR;
+  especialIns: Fill = Fill.MERENGUE;
+  especialIns2: Fill | null = null;
 
-  special() {
+  half() {
     this.plus = !this.plus;
     if (this.plus) {
+      this.especialIns2 = Fill.CREMA;
       this.symbol = 'remove';
     } else {
       this.symbol = 'add';
+      this.especialIns2 = null;
     }
   }
 
@@ -48,34 +56,42 @@ export class PanelComponent {
     }).format(tot);
   }
 
-  send() {
-    // Database connection code
-    let conexion: boolean = true;
-    if (conexion) {
-      this.openPopup();
-    } else {
-      this.openPopupError();
-    }
-  }
-
   addRoscon(tipo: Type) {
-    //Check if it is in products
     let found: boolean = false;
-    for (let pr of this.prods) {
-      if (tipo == pr.type) {
-        found = true;
-        pr.quantity++;
-        break;
+    //Si el roscon no es especial
+    if (tipo != Type.ESP) {
+      for (let pr of this.prods) {
+        if (tipo == pr.type) {
+          found = true;
+          pr.quantity++;
+          break;
+        }
       }
-    }
-    if (!found) {
-      const copiedProducts = products.map((product) => ({ ...product }));
+      if (!found) {
+        const copiedProducts = products.map((product) => ({ ...product }));
+        this.prods.push(copiedProducts[Object.values(Type).indexOf(tipo)]);
+      }
+    } else {
+      //En caso de que sea especial
+      let esp_default: Product = {
+        type: Type.ESP,
+        quantity: 1,
+        price: 24,
+        especial: {
+          size: this.specialSize,
+          fill: this.especialIns,
+          half: this.especialIns2,
+        },
+      };
+      this.prods.push(esp_default);
+      //const copiaDefault = esp_default.map((product) => ({ ...product }));
 
-      this.prods.push(copiedProducts[Object.values(Type).indexOf(tipo)]);
-      //this.prods.push( products[Object.values(Type).indexOf(tipo)]);
+      //especial.
     }
+
     this.totals();
   }
+
   increaseQuantity(index: number) {
     this.prods[index].quantity++;
     this.totals();
@@ -117,5 +133,15 @@ export class PanelComponent {
 
   newSpecial(form: NgForm) {
     this.specialSize = form.controls['special-size'].value;
+  }
+
+  send() {
+    // Database connection code
+    let conexion: boolean = true;
+    if (conexion) {
+      this.openPopup();
+    } else {
+      this.openPopupError();
+    }
   }
 }

@@ -1,23 +1,24 @@
 export enum Type {
-  GR_NATA = 'ROSCON GRANDE NATA',
-  GR_SIN = 'ROSCON GRANDE SIN RELLENO',
-  PEQ_NATA = 'ROSCON PEQUEÑO NATA',
-  PEQ_SIN = 'ROSCON PEQUEÑO SIN RELLENO',
-  ESP = 'ROSCON ESPECIAL',
+  GR_NATA = 'GRANDE NATA',
+  GR_SIN = 'GRANDE SIN RELLENO',
+  PEQ_NATA = 'PEQUEÑO NATA',
+  PEQ_SIN = 'PEQUEÑO SIN RELLENO',
+  ESP = 'ESPECIAL',
 }
 
 export enum Size {
   GR = 'GRANDE',
+  MD = 'MEDIANO',
   PEQ = 'PEQUEÑO',
 }
 
 export enum Fill {
-  NATA,
-  MOCA,
-  MERENGUE,
-  CREMA,
-  CAFE,
-  EMPTY,
+  NATA = 'NATA',
+  MOCA = 'MOCA',
+  MERENGUE = 'MERENGUE',
+  CREMA = 'CREMA',
+  CAFE = 'CAFE',
+  EMPTY = 'SIN RELLENO',
 }
 
 export interface Especial {

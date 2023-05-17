@@ -33,22 +33,18 @@
         <form #sizeForm="ngForm" (ngSubmit)="newSpecial(sizeForm)">
           <div class="container">
             <div class="row">
-              <div class="col-xs-4">
+              <div class="row-xs-4">
                 <label>Tamaño</label>
-                <input
-                  type="radio"
-                  id="small-special"
-                  name="special-size"
-                  value="small"
-                  ngModel
-                />Pequeño<input
-                  type="radio"
-                  id="big-special"
-                  name="special-size"
-                  value="big"
-                  ngModel
-                />Grande
-                <br />
+                <div *ngFor="let size of sizeValues">
+                  <label>{{ size }}</label>
+                  <input
+                    type="radio"
+                    name="special-size"
+                    [value]="size"
+                    [(ngModel)]="specialSize"
+                  />
+                </div>
+
                 <br />
                 <div>
                   <table class="table-responsive-md center">
@@ -58,19 +54,25 @@
                         <td>
                           <div>
                             <label for="speciall-ins">Relleno</label>
-                            <select name="special-ins" id="special-ins">
-                              <option value="nata">Nata</option>
-                              <option value="merengue">Merengue</option>
-                              <option value="chocolate">Chocolate</option>
-                              <option value="crema">Crema</option>
-                              <option value="cabello">Cabello de angel</option>
+
+                            <select
+                              [(ngModel)]="especialIns"
+                              name="special-ins"
+                              id="special-ins"
+                            >
+                              <option
+                                *ngFor="let fill of fillValues"
+                                [value]="fill"
+                              >
+                                {{ fill }}
+                              </option>
                             </select>
                           </div>
                         </td>
                         <td>
                           <button
                             class="btn btn-primary"
-                            (click)="special()"
+                            (click)="half()"
                             id="plu"
                           >
                             <i class="material-icons black">{{ symbol }}</i>
@@ -78,14 +80,17 @@
                         </td>
                         <td>
                           <div *ngIf="plus; else nop">
-                            <label for="speciall-ins-2">Relleno 2</label>
-                            <select name="special-ins-2" id="special-ins-2">
-                              <option value="empty">Sin relleno</option>
-                              <option value="merengue-2">Merengue</option>
-                              <option value="chocolate-2">Chocolate</option>
-                              <option value="crema-2">Crema</option>
-                              <option value="cabello-2">
-                                Cabello de angel
+                            <label for="speciall-ins-2">Mitad</label>
+                            <select
+                              [(ngModel)]="especialIns2"
+                              name="special-ins2"
+                              id="special-ins2"
+                            >
+                              <option
+                                *ngFor="let fill of fillValues"
+                                [value]="fill"
+                              >
+                                {{ fill }}
                               </option>
                             </select>
                           </div>
@@ -99,7 +104,9 @@
               <div class="col-md-4">
                 <br />
                 <br />
-                <button class="btn btn-primary">Añadir</button>
+                <button (click)="addRoscon(Type.ESP)" class="btn btn-primary">
+                  Añadir especial
+                </button>
               </div>
             </div>
           </div>
@@ -109,7 +116,7 @@
     <!-- Carrito -->
     <div class="col-xs-6">
       <div class="margin">
-        <h2>Carrito</h2>
+        <h2>LISTA PEDIDO</h2>
         <table class="table">
           <thead>
             <tr>
@@ -121,7 +128,28 @@
           </thead>
           <tbody *ngIf="prods.length > 0">
             <tr *ngFor="let product of prods; let i = index">
-              <td scope="row">{{ product.type }}</td>
+              <td scope="row">{{ product.type }}
+                <div *ngIf=" product.especial != null && product.type === Type.ESP">
+                  <ul>
+                    <li><b>Tamaño:</b> {{ product.especial.size }}</li>
+                  
+                    <li *ngIf="product.especial.half == null; else elseBlock">
+                      Relleno: {{ product.especial.fill }}
+                    </li>
+                    <ng-template #elseBlock>
+                      <li>
+                        Mitad: {{ product.especial.fill }}
+                      </li>
+                      <li>
+                        Mitad: {{ product.especial.half }}
+                      </li>
+                    </ng-template>
+
+                  </ul>
+                </div>
+                
+
+              </td>
               <td>{{ product.quantity }}</td>
               <td>
                 <button
