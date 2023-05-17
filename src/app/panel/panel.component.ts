@@ -5,7 +5,6 @@ import { Product } from '../products';
 import { products } from '../products';
 import { Type } from '../products';
 
-
 @Component({
   selector: 'app-panel',
   templateUrl: './panel.component.html',
@@ -21,6 +20,9 @@ export class PanelComponent {
   displayStyle: string = 'none';
   displayStyleError: string = 'none';
   specialSize: string = '';
+  //type: Type = Type.GR_NATA;
+  Type = Type;
+  //products = products
 
   special() {
     this.plus = !this.plus;
@@ -39,11 +41,11 @@ export class PanelComponent {
         console.log(product);
         console.log('Total: ' + tot);
       }
-      this.total = new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format(tot);
     }
+    this.total = new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+    }).format(tot);
   }
 
   send() {
@@ -56,29 +58,36 @@ export class PanelComponent {
     }
   }
 
-  addNataBig() {
+  addRoscon(tipo: Type) {
     //Check if it is in products
+    let found: boolean = false;
+    for (let pr of this.prods) {
+      if (tipo == pr.type) {
+        found = true;
+        pr.quantity++;
+        break;
+      }
+    }
+    if (!found) {
+      const copiedProducts = products.map((product) => ({ ...product }));
 
-    this.prods.push(products[0]);
+      this.prods.push(copiedProducts[Object.values(Type).indexOf(tipo)]);
+      //this.prods.push( products[Object.values(Type).indexOf(tipo)]);
+    }
     this.totals();
   }
-  addSinBig() {
-    //Check if it is in products
-
-    this.prods.push(products[0]);
+  increaseQuantity(index: number) {
+    this.prods[index].quantity++;
     this.totals();
+    //console.log(this.prods);
   }
-  addNataSmall() {
-    //Check if it is in products
 
-    this.prods.push(products[0]);
-    this.totals();
-  }
-  addSinSmall() {
-    //Check if it is in products
+  decreaseQuantity(index: number) {
+    this.prods[index].quantity--;
+    if (this.prods[index].quantity == 0) this.prods.splice(index, 1);
 
-    this.prods.push(products[0]);
     this.totals();
+    //console.log(this.prods);
   }
 
   openPopup() {

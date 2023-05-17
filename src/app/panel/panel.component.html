@@ -18,10 +18,14 @@
           </thead>
           <tbody>
             <tr>
-              <td><button (click)="addNataBig()">Nata</button></td>
-              <td><button>Sin relleno</button></td>
-              <td><button>Nata</button></td>
-              <td><button>Sin relleno</button></td>
+              <td><button (click)="addRoscon(Type.GR_NATA)">Nata</button></td>
+              <td>
+                <button (click)="addRoscon(Type.GR_SIN)">Sin relleno</button>
+              </td>
+              <td><button (click)="addRoscon(Type.PEQ_NATA)">Nata</button></td>
+              <td>
+                <button (click)="addRoscon(Type.PEQ_SIN)">Sin relleno</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -112,27 +116,29 @@
               <th scope="col">Producto</th>
               <th scope="col">Cantidad</th>
               <th scope="col">Añadir</th>
-              <th scope="col">Quitar uno</th>
-              <th scope="col">Quitar todos</th>
+              <th scope="col">Quitar</th>
             </tr>
           </thead>
           <tbody *ngIf="prods.length > 0">
-            <tr *ngFor="let product of prods">
-              <td scope="row">{{ product.name }}</td>
+            <tr *ngFor="let product of prods; let i = index">
+              <td scope="row">{{ product.type }}</td>
               <td>{{ product.quantity }}</td>
               <td>
-                <button type="button" class="btn btn-link">
+                <button
+                  type="button"
+                  class="btn btn-link"
+                  (click)="increaseQuantity(i)"
+                >
                   <i class="material-icons black">add</i>
                 </button>
               </td>
               <td>
-                <button type="button" class="btn btn-link">
+                <button
+                  type="button"
+                  class="btn btn-link"
+                  (click)="decreaseQuantity(i)"
+                >
                   <i class="material-icons black">remove</i>
-                </button>
-              </td>
-              <td>
-                <button type="button" class="btn btn-link">
-                  <i class="material-icons red">delete</i>
                 </button>
               </td>
             </tr>
