@@ -17,17 +17,18 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "useDefineForClassFields": false,
-    "target": "ES2022",
-    "module": "ES2022",
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "target": "es2022",
+    "module": "es2022",
+    "resolveJsonModule": true,//
+    "esModuleInterop": true,// To works with json
+    "allowSyntheticDefaultImports": true,
+//
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "include": ["src/assets/credentials.json"]
 }

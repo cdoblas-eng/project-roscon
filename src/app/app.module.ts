@@ -2,14 +2,13 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { PanelComponent } from './panel/panel.component';
 
 @NgModule({
-  imports: [BrowserModule, ReactiveFormsModule, FormsModule, NgbModule],
+  imports: [BrowserModule, ReactiveFormsModule, FormsModule],
   declarations: [AppComponent, TopBarComponent, PanelComponent],
   bootstrap: [AppComponent],
 })

@@ -6,6 +6,7 @@ import { products } from '../products';
 import { Type } from '../products';
 import { Fill } from '../products';
 import { Size } from '../products';
+import {insertRoscon} from "../db/db";
 
 @Component({
   selector: 'app-panel',
@@ -139,6 +140,9 @@ export class PanelComponent {
     // Database connection code
     let conexion: boolean = true;
     if (conexion) {
+      this.prods.forEach(item =>{
+        insertRoscon(this.telef, item)
+      })
       this.openPopup();
     } else {
       this.openPopupError();
