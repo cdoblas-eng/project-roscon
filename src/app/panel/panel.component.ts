@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { Product } from '../products';
@@ -6,7 +6,8 @@ import { products } from '../products';
 import { Type } from '../products';
 import { Fill } from '../products';
 import { Size } from '../products';
-import {insertRoscon} from "../db/db";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-panel',
@@ -14,7 +15,12 @@ import {insertRoscon} from "../db/db";
   styleUrls: ['./panel.component.css'],
 })
 export class PanelComponent {
-  telef: string = '';
+
+  constructor(private http: HttpClient) {
+
+  }
+
+  cliente: string = '';
   plus: boolean = false;
   symbol: string = 'add';
   prods: Product[] = [];
@@ -62,7 +68,7 @@ export class PanelComponent {
     //Si el roscon no es especial
     if (tipo != Type.ESP) {
       for (let pr of this.prods) {
-        if (tipo == pr.type) {
+        if (tipo == pr.roscontype) {
           found = true;
           pr.quantity++;
           break;
@@ -75,8 +81,9 @@ export class PanelComponent {
     } else {
       //En caso de que sea especial
       let esp_default: Product = {
-        type: Type.ESP,
+        roscontype: Type.ESP,
         quantity: 1,
+        notes: null,
         price: 24,
         especial: {
           size: this.specialSize,
@@ -85,9 +92,7 @@ export class PanelComponent {
         },
       };
       this.prods.push(esp_default);
-      //const copiaDefault = esp_default.map((product) => ({ ...product }));
 
-      //especial.
     }
 
     this.totals();
@@ -124,7 +129,7 @@ export class PanelComponent {
   }
 
   clear() {
-    this.telef = '';
+    this.cliente = '';
     this.plus = false;
     this.symbol = 'add';
     this.prods = [];
@@ -136,16 +141,26 @@ export class PanelComponent {
     this.specialSize = form.controls['special-size'].value;
   }
 
+
   send() {
-    // Database connection code
-    let conexion: boolean = true;
-    if (conexion) {
-      this.prods.forEach(item =>{
-        insertRoscon(this.telef, item)
-      })
-      this.openPopup();
-    } else {
-      this.openPopupError();
-    }
+    const apiUrl = 'http://localhost:3000/receive'
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    // Generar el JSON con el campo "cliente" y el array de elementos
+    const body = {
+      cliente: this.cliente,
+      roscones: this.prods
+    };
+
+    this.http.post(apiUrl, body, { headers }).subscribe(
+        value => {
+          console.log("Peticion realizada")
+          this.openPopup()
+        }
+
+    );
   }
 }
