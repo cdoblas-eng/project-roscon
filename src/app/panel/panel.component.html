@@ -18,32 +18,42 @@
           </thead>
           <tbody>
             <tr>
-              <td><button (click)="addRoscon(Type.GR_NATA)">Nata</button></td>
+              <td><button class="btn-custom" style="background-color: aliceblue" (click)="addRoscon(Type.GR_NATA)">Nata</button></td>
               <td>
-                <button (click)="addRoscon(Type.GR_SIN)">Sin relleno</button>
+                <button class="btn-custom" style="background-color: sandybrown" (click)="addRoscon(Type.GR_SIN)">Sin relleno</button>
               </td>
-              <td><button (click)="addRoscon(Type.PEQ_NATA)">Nata</button></td>
+              <td><button class="btn-custom" style="background-color: aliceblue" (click)="addRoscon(Type.PEQ_NATA)">Nata</button></td>
               <td>
-                <button (click)="addRoscon(Type.PEQ_SIN)">Sin relleno</button>
+                <button class="btn-custom" style="background-color: sandybrown" (click)="addRoscon(Type.PEQ_SIN)">Sin relleno</button>
               </td>
             </tr>
           </tbody>
         </table>
         <h3>Añadir roscón especial</h3>
+
+<!--          <form class="form">-->
+<!--              <h2>Tamaño especial</h2>-->
+
+<!--          </form>-->
         <form #sizeForm="ngForm" (ngSubmit)="newSpecial(sizeForm)">
           <div class="container">
             <div class="row">
               <div class="row-xs-4">
-                <label>Tamaño</label>
-                <div *ngFor="let size of sizeValues">
-                  <label>{{ size }}</label>
-                  <input
-                    type="radio"
-                    name="special-size"
-                    [value]="size"
-                    [(ngModel)]="specialSize"
-                  />
-                </div>
+                  <div class="switch-field">
+                      <input type="radio" id="radio-one" name="special-size" value="GRANDE" [(ngModel)]="specialSize"/>
+                      <label for="radio-one">Grande</label>
+                      <input type="radio" id="radio-two" name="special-size" value="PEQUEÑO" [(ngModel)]="specialSize" />
+                      <label for="radio-two">Pequeño</label>
+                  </div>
+<!--                <div *ngFor="let size of sizeValues">-->
+<!--                  <label>{{ size }}</label>-->
+<!--                  <input-->
+<!--                    type="radio"-->
+<!--                    name="special-size"-->
+<!--                    [value]="size"-->
+<!--                    [(ngModel)]="specialSize"-->
+<!--                  />-->
+<!--                </div>-->
 
                 <br />
                 <div>
