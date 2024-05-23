@@ -29,7 +29,6 @@ export interface Especial {
 export interface Product{
   roscontype: Type;
   quantity: number;
-  price: number;
   notes: string | null
   especial: Especial | null;
 }
@@ -38,28 +37,24 @@ export const products = [
   {
     roscontype: Type.GR_NATA,
     quantity: 1,
-    price: 18,
     notes: null,
     especial: null,
   },
   {
     roscontype: Type.GR_SIN,
     quantity: 1,
-    price: 16,
     notes: null,
     especial: null,
   },
   {
     roscontype: Type.PEQ_NATA,
     quantity: 1,
-    price: 14,
     notes: null,
     especial: null,
   },
   {
     roscontype: Type.PEQ_SIN,
     quantity: 1,
-    price: 12,
     notes: null,
     especial: null,
   },
