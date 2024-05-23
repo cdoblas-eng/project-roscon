@@ -3,7 +3,7 @@ import {NgForm} from '@angular/forms';
 
 import {Fill, Product, products, Size, Type} from '../products';
 import {HttpClient} from "@angular/common/http";
-import {RosconesService} from "../roscones.service";
+import {RosconesService} from "../services/roscones.service";
 
 @Component({
     selector: 'app-mainpanel',
