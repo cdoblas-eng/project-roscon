@@ -1,0 +1,263 @@
+<!--</header>-->
+
+<div class="container mt-4 mb-2" id="main-panel">
+    <div class="row">
+        <div class="col-md-6 text-uppercase miborde" id="column-1">
+            <!-- Primera Fila -->
+            <div class="row ">
+                <div class="col-md-12 d-flex align-items-center justify-content-center">
+                    <label class="m-1">
+                        <input
+                                type="text"
+                                placeholder="Tlf/Dni cliente"
+                                class="form-control"
+                                [disabled]="updateOrderMode"
+                                [(ngModel)]="client"
+                        />
+                    </label>
+                    <button type="button" [hidden]="updateOrderMode || client===''" (click)="search()"
+                            class="btn-warning my-1 mx-2">
+                        <i class="bi bi-search h4"></i>
+                    </button>
+
+                    <button *ngIf="updateOrderMode" (click)="cancelUpdateMode()" type="button"
+                            class="btn-warning my-1 mx-2">
+                        <i class="bi bi-x-octagon-fill h4"></i>
+                    </button>
+
+                </div>
+
+                <div class="col-md-12  d-flex align-items-center justify-content-center">
+                    <table class="table center miborde-interno">
+                        <thead>
+                        <tr class="text-center">
+                            <th scope="col" class="center text-uppercase" colspan="2"
+                                style="background-color: rgba(139,69,19,0.6)">Grande
+                            </th>
+                            <th scope="col" class="center text-uppercase" colspan="2"
+                                style="background-color: lightblue">Pequeño
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr>
+                            <td style="background-color: rgba(139,69,19,0.25)">
+                                <button id="button0" class="btn btn-light btn-auto text-uppercase" (click)="addRoscon(Type.GR_NATA)">
+                                    Nata
+                                </button>
+                            </td>
+                            <td style="background-color: rgba(139,69,19,0.25)">
+                                <button id="button1" class="btn btn-warning btn-auto text-uppercase"
+                                        (click)="addRoscon(Type.GR_SIN)">Sin relleno
+                                </button>
+                            </td>
+                            <td style="background-color: rgba(176,224,230,0.3)">
+                                <button id="button2" class="btn btn-light btn-auto text-uppercase"
+                                        (click)="addRoscon(Type.PEQ_NATA)">Nata
+                                </button>
+                            </td>
+                            <td style="background-color: rgba(176,224,230,0.3)">
+                                <button id="button3" class="btn btn-warning btn-auto text-uppercase"
+                                        (click)="addRoscon(Type.PEQ_SIN)">Sin relleno
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- Segunda Fila -->
+            <div class="row">
+                <div class="col-md-12  d-flex align-items-center justify-content-center">
+                    <h2>ROSCON ESPECIAL:</h2>
+                </div>
+                <div class="col-md-12  d-flex align-items-center justify-content-center btn-group" role="group"
+                     aria-label="Opciones">
+                    <label *ngFor="let size of sizeValues" id="{{size}}" [class.active]="activeSize == size"
+                           class="btn my-1 text-uppercase}">
+                        <input type="radio" class="radio-hidden " name="special-size" value="{{size}}"
+                               autocomplete="off"
+                               checked [(ngModel)]="specialSize" (click)="setActive(size)"/>
+                        {{ size }}
+                    </label>
+                </div>
+                <div class="col-md-12  d-flex align-items-center justify-content-center">
+                    <label class="m-1">
+                        <select [(ngModel)]="especialIns" (change)="getFillValues()" name="special-ins" id="special-ins"
+                                class="form-control text-uppercase text-center">
+                            <option value="" disabled selected>Relleno Especial</option>
+                            <option
+                                    *ngFor="let fill of fillValues"
+                                    [value]="fill"
+                            >
+                                {{ fill }}
+                            </option>
+
+                        </select>
+                    </label>
+                    <button type="button" id="speciall-ins-2" (click)="half()" class="btn-warning my-1 mx-2">
+                        <i class="{{plusOrMinusButton}}"></i>
+                    </button>
+                    <label *ngIf="enableSecondFill;" class="m-1">
+                        <select [(ngModel)]="especialIns2" (change)="getFillValues()" name="special-ins2" id="special-ins2"
+                                class="form-control text-uppercase text-center">
+                            <option value="" disabled selected>SEGUNDA MITAD</option>
+
+                            <option
+                                    *ngFor="let fill of fillValues2"
+                                    [value]="fill"
+                            >
+                                {{ fill }}
+                            </option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="col-md-12  d-flex align-items-center justify-content-center">
+                    <button (click)="addRoscon(Type.ESP)" class="btn btn-warning m-1">Añadir especial</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6 miborde scrollable" id="column-2">
+            <div class="row-md-12  d-flex align-items-center justify-content-center">
+                <h2>Lista pedido</h2>
+            </div>
+            <div class="row-md-12  d-flex align-items-center justify-content-center">
+                <table class="table table-striped center miborde-interno text-center scrollable">
+
+                    <thead class="thead-light miborde-interno">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Notas</th>
+                        <th>Añadir</th>
+                        <th>Quitar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let product of prods; let i = index">
+                        <td class="align-middle">{{ product.roscontype }}
+                            <div *ngIf=" product.especial != null && product.roscontype === Type.ESP">
+                                <ul>
+                                    <li><b>{{ product.especial.size }}</b></li>
+
+                                    <li *ngIf="product.especial.half == null; else elseBlock">
+                                        <b>{{ product.especial.fill }}</b>
+                                    </li>
+                                    <ng-template #elseBlock>
+                                        <li>
+                                            <b>{{ product.especial.fill }}</b>
+                                        </li>
+                                        <li>
+                                            <b>{{ product.especial.half }}</b>
+                                        </li>
+                                    </ng-template>
+
+                                </ul>
+                            </div>
+
+                        </td>
+                        <td class="align-middle">{{ product.quantity }}</td>
+                        <td class="align-middle">
+                                    <textarea [(ngModel)]="product['notes']" style="resize: none" id="miTextarea"
+                                              name="miTextarea" rows="2" cols="10"></textarea></td>
+                        <td class="align-middle">
+                            <button type="button" class="btn"
+                                    (click)="increaseQuantity(i)"
+                            >
+                                <i class="bi bi-plus-lg h3"></i>
+                            </button>
+                        </td>
+                        <td class="align-middle">
+                            <button (click)="decreaseQuantity(i)" type="button" class="btn">
+                                <i class="bi bi-dash-lg h3"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div
+        class="modal"
+        tabindex="-1"
+        role="dialog"
+        [ngStyle]="{ display: displayStyle }"
+>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ popupMessage }}</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="closePopup()">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+        class="modal"
+        tabindex="-1"
+        role="dialog"
+        [ngStyle]="{ display: displayStyleError }"
+>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ha habido un error del sistema, contacte con el administrador...</h4>
+            </div>
+            <div class="modal-footer">
+                <button
+                        type="button"
+                        class="btn btn-primary"
+                        (click)="closePopupError()"
+                >
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center">
+    <ng-container *ngIf="!updateOrderMode; else elseBlock">
+        <button class="btn" style="color: #e4e4e4;background-color: #9f3e81" (click)="send()"
+                [disabled]="prods.length === 0 || client === ''">Enviar encargo
+        </button>
+    </ng-container>
+    <ng-template #elseBlock>
+        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="cancelUpdateMode()">
+            Cancelar
+        </button>
+        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="deleteOrder()">
+            Eliminar pedido
+        </button>
+        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="updateOrder()"
+                [disabled]="prods.length === 0 || client === ''">
+            Modificar pedido
+        </button>
+    </ng-template>
+
+    <!--    <ng-container *ngIf="isConditionTrue; else elseBlock">-->
+    <!--        <p>La condición es verdadera.</p>-->
+    <!--    </ng-container>-->
+    <!--    <ng-template #elseBlock>-->
+    <!--        <p>La condición es falsa.</p>-->
+    <!--    </ng-template>-->
+    <!--    >-->
+
+
+</footer>
+
