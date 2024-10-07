@@ -1,1 +1,36 @@
-<p>tablaroscones works!</p>
+<div class="container">
+    <div class="form-group d-inline-flex">
+        <input
+                type="text"
+                style="padding:8px;margin:8px auto;width:50vh;"
+                [(ngModel)]="filterValue"
+                placeholder="Introduce un valor para filtrar"
+                class="form-control"
+                (keyup)="updateFilter()"
+        />
+
+        <select [(ngModel)]="filterColumn" style="padding:8px;margin:8px auto;width:50vh;" (change)="updateFilter()"
+                name="special-ins2" id="special-ins2"
+                class="form-control text-uppercase text-center">
+            <option value="" selected>Filtro por columna</option>
+
+            <option
+                    *ngFor="let column of columns"
+                    [value]="column.prop">
+                {{ column.name }}
+            </option>
+        </select>
+
+    </div>
+    <ngx-datatable
+            class="material"
+            [rows]="rows"
+            [columns]="columns"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [rowHeight]="'auto'"
+            [limit]="8"
+    >
+    </ngx-datatable>
+</div>

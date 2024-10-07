@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Product} from "../products";
+import {Roscon} from "../products";
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,12 @@ export class RosconesService {
     const url = `${this.serverUrl}/roscones/${cliente}`;
     return this.http.get<any[]>(url);
   }
+  getAllRoscones(): Observable<any[]> {
+    const url = `${this.serverUrl}/roscones`;
+    return this.http.get<any[]>(url);
+  }
 
-  sendOrder(client: string, prods: Product[]): Observable<any[]> {
+  sendOrder(client: string, prods: Roscon[]): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -32,7 +36,7 @@ export class RosconesService {
     return this.http.delete<any[]>(url, { headers });
   }
 
-  modifyOrder(client: string, prods: Product[]): Observable<any[]> {
+  modifyOrder(client: string, prods: Roscon[]): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
@@ -40,4 +44,5 @@ export class RosconesService {
     const url = `${this.serverUrl}/roscones/${client}`;
     return this.http.put<any[]>(url, prods, { headers });
   }
+
 }

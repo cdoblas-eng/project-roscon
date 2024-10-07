@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {NgForm} from '@angular/forms';
 
-import {Fill, Product, products, Size, Type} from '../products';
+import {Fill, newRoscon, Roscon, Size} from '../products';
 import {HttpClient} from "@angular/common/http";
 import {RosconesService} from "../services/roscones.service";
 
 @Component({
     selector: 'app-mainpanel',
     templateUrl: './main-panel.component.html',
-    styleUrls: ['./main-panel.component.css'],
+    styleUrls: ['./main-panel.component.scss'],
 })
 export class MainPanelComponent {
 
@@ -19,20 +19,18 @@ export class MainPanelComponent {
     client: string = ''; // Cliente, numero de telefono o dni
     enableSecondFill: boolean = false; // Estado de añadir segundo relleno por defecto false
     plusOrMinusButton: string = 'bi bi-plus-lg';
-    prods: Product[] = [];
+    rosconArray: Roscon[] = [];
     total: string = '0,00€';
     main: boolean = false;
     displayStyle: string = 'none';
     displayStyleError: string = 'none';
     popupMessage: string = "";
-    Type = Type;
     //Valores de enumerados
     fillValues: Fill[]= Object.values(Fill).filter(value => value != Fill.NATA);
     fillValues2: Fill[]= [];
 
     sizeValues = Object.values(Size);
     activeSize = Size.GR.toString();
-    //Atributos de roscon especial
     specialSize: Size = Size.GR;
     especialIns: Fill = Fill.CREMA;
     especialIns2: Fill | null = Fill.EMPTY;
@@ -84,11 +82,9 @@ export class MainPanelComponent {
         console.log('Action confirmed');
     }
 
-
     setActive(size: string) {
         this.activeSize = size;
     }
-
 
     half() {
         this.enableSecondFill = !this.enableSecondFill;
@@ -101,49 +97,40 @@ export class MainPanelComponent {
         }
     }
 
-    addRoscon(tipo: Type) {
+    addRoscon(size: Size, fill: Fill) {
         let found: boolean = false;
-        //Si el roscon no es especial
-        if (tipo != Type.ESP) {
-            for (let pr of this.prods) {
-                if (tipo == pr.roscontype) {
-                    found = true;
-                    pr.quantity++;
-                    break;
-                }
-            }
-            if (!found) {
-                const copiedProducts = products.map((product) => ({...product}));
-                this.prods.push(copiedProducts[Object.values(Type).indexOf(tipo)]);
-            }
-        } else {
-            //En caso de que sea especial
-            let esp_default: Product = {
-                roscontype: Type.ESP,
-                quantity: 1,
-                notes: null,
-                especial: {
-                    size: this.specialSize,
-                    fill: this.especialIns,
-                    half: this.enableSecondFill ? this.especialIns2 : null,
-                },
-            };
-            this.prods.push(esp_default);
 
+        for (let roscon of this.rosconArray) {
+            if (size === roscon.size && fill === roscon.fill ) {
+                found = true;
+                roscon.quantity++;
+                break;
+            }
         }
 
-        // this.totals();
+        if (!found)
+            this.rosconArray.push(newRoscon(size, fill));
+    }
+
+    addEspecial(){
+        //En caso de que sea especial
+        let esp_default: Roscon = {
+            quantity: 1,
+            notes: null,
+            size: this.specialSize,
+            fill: this.especialIns,
+            half: this.enableSecondFill ? this.especialIns2 : null,
+        };
+        this.rosconArray.push(esp_default);
     }
 
     increaseQuantity(index: number) {
-        this.prods[index].quantity++;
-        // this.totals();
-        //console.log(this.prods);
+        this.rosconArray[index].quantity++;
     }
 
     decreaseQuantity(index: number) {
-        this.prods[index].quantity--;
-        if (this.prods[index].quantity == 0) this.prods.splice(index, 1);
+        this.rosconArray[index].quantity--;
+        if (this.rosconArray[index].quantity == 0) this.rosconArray.splice(index, 1);
 
         // this.totals();
         //console.log(this.prods);
@@ -171,7 +158,7 @@ export class MainPanelComponent {
         this.client = '';
         this.enableSecondFill = false;
         this.plusOrMinusButton = 'bi bi-plus-lg';
-        this.prods = [];
+        this.rosconArray = [];
         this.total = '0,00€';
         this.main = false;
         this.activeSize = Size.GR.toString();
@@ -183,7 +170,7 @@ export class MainPanelComponent {
     }
 
     send() {
-        this.rosconesService.sendOrder(this.client, this.prods).subscribe(
+        this.rosconesService.sendOrder(this.client, this.rosconArray).subscribe(
             {
                 next: (v) => console.log(v),
                 error: (e) => {
@@ -209,24 +196,9 @@ export class MainPanelComponent {
                 if (Object.keys(v).length != 0) {
                     v.forEach(roscon => {
                         console.log(roscon)
-                        if (roscon.roscontype == Type.ESP) {
-//                            console.log(roscon)
-                            //Introduzco la variable especial debido a que el formato de los roscones es
-                            // export interface Product{
-                            //     roscontype: Type;
-                            //     quantity: number;
-                            //     notes: string | null
-                            //     especial: Especial | null; // necesito simular este campo en el json
-                            // }
-                            roscon['especial'] = {
-                                'size': roscon.size,
-                                'fill': roscon.fill,
-                                'half': roscon.half
-                            };
-
-                        }
+                        // this.rosconesService.addSpecialFields(roscon);
                     })
-                    this.prods = v;
+                    this.rosconArray = v;
                     // console.log(this.prods);
                     this.updateOrderMode = true;
                 } else { // si no encuentra el cliente
@@ -267,7 +239,7 @@ export class MainPanelComponent {
     }
 
     updateOrder() {
-        this.rosconesService.modifyOrder(this.client, this.prods).subscribe(
+        this.rosconesService.modifyOrder(this.client, this.rosconArray).subscribe(
             {
                 error: (e) => {
                     //mostrar error
@@ -303,4 +275,7 @@ export class MainPanelComponent {
 
         this.clear()
     }
+
+    protected readonly Size = Size;
+    protected readonly Fill = Fill;
 }

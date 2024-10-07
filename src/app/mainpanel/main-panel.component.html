@@ -42,23 +42,23 @@
                         <tbody class="text-center">
                         <tr>
                             <td style="background-color: rgba(139,69,19,0.25)">
-                                <button id="button0" class="btn btn-light btn-auto text-uppercase" (click)="addRoscon(Type.GR_NATA)">
+                                <button id="button0" class="btn btn-light btn-auto text-uppercase" (click)="addRoscon(Size.GR, Fill.NATA)">
                                     Nata
                                 </button>
                             </td>
                             <td style="background-color: rgba(139,69,19,0.25)">
                                 <button id="button1" class="btn btn-warning btn-auto text-uppercase"
-                                        (click)="addRoscon(Type.GR_SIN)">Sin relleno
+                                        (click)="addRoscon(Size.GR, Fill.EMPTY)">Sin relleno
                                 </button>
                             </td>
                             <td style="background-color: rgba(176,224,230,0.3)">
                                 <button id="button2" class="btn btn-light btn-auto text-uppercase"
-                                        (click)="addRoscon(Type.PEQ_NATA)">Nata
+                                        (click)="addRoscon(Size.PEQ, Fill.NATA)">Nata
                                 </button>
                             </td>
                             <td style="background-color: rgba(176,224,230,0.3)">
                                 <button id="button3" class="btn btn-warning btn-auto text-uppercase"
-                                        (click)="addRoscon(Type.PEQ_SIN)">Sin relleno
+                                        (click)="addRoscon(Size.PEQ, Fill.EMPTY)">Sin relleno
                                 </button>
                             </td>
                         </tr>
@@ -116,7 +116,7 @@
                 </div>
 
                 <div class="col-md-12  d-flex align-items-center justify-content-center">
-                    <button (click)="addRoscon(Type.ESP)" class="btn btn-warning m-1">Añadir especial</button>
+                    <button (click)="addEspecial()" class="btn btn-warning m-1">Añadir especial</button>
                 </div>
             </div>
 
@@ -131,39 +131,37 @@
 
                     <thead class="thead-light miborde-interno">
                     <tr>
-                        <th>Producto</th>
+                        <th>Tamaño</th>
+                        <th>Relleno</th>
                         <th>Cantidad</th>
                         <th>Notas</th>
-                        <th>Añadir</th>
-                        <th>Quitar</th>
+                        <th>+</th>
+                        <th>-</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let product of prods; let i = index">
-                        <td class="align-middle">{{ product.roscontype }}
-                            <div *ngIf=" product.especial != null && product.roscontype === Type.ESP">
-                                <ul>
-                                    <li><b>{{ product.especial.size }}</b></li>
-
-                                    <li *ngIf="product.especial.half == null; else elseBlock">
-                                        <b>{{ product.especial.fill }}</b>
-                                    </li>
-                                    <ng-template #elseBlock>
-                                        <li>
-                                            <b>{{ product.especial.fill }}</b>
-                                        </li>
-                                        <li>
-                                            <b>{{ product.especial.half }}</b>
-                                        </li>
-                                    </ng-template>
-
-                                </ul>
-                            </div>
-
-                        </td>
-                        <td class="align-middle">{{ product.quantity }}</td>
+                    <tr *ngFor="let roscon of rosconArray; let i = index">
+                        <td class="align-middle">{{ roscon.size }}</td>
                         <td class="align-middle">
-                                    <textarea [(ngModel)]="product['notes']" style="resize: none" id="miTextarea"
+<!--                            <div *ngIf="roscon.half != null; else elseBlock">-->
+<!--                                <b>-{{ roscon.fill }}</b> <br>-->
+<!--                                <b>-{{ roscon.half }}</b>-->
+<!--                            </div>-->
+                            <ul class="m-0 p-0 align-middle" style="list-style: none" *ngIf="roscon.half != null; else elseBlock">
+                                <li style="font-size: small">
+                                    <b>{{ roscon.fill }}</b>
+                                </li>
+                                <li style="font-size: small">
+                                    <b>{{ roscon.half }}</b>
+                                </li>
+                            </ul>
+                            <ng-template #elseBlock>
+                                <b>{{ roscon.fill }}</b>
+                            </ng-template>
+                        </td>
+                        <td class="align-middle">{{ roscon.quantity }}</td>
+                        <td class="align-middle">
+                                    <textarea [(ngModel)]="roscon['notes']" style="resize: none" id="miTextarea"
                                               name="miTextarea" rows="2" cols="10"></textarea></td>
                         <td class="align-middle">
                             <button type="button" class="btn"
@@ -234,7 +232,7 @@
 <footer class="text-center">
     <ng-container *ngIf="!updateOrderMode; else elseBlock">
         <button class="btn" style="color: #e4e4e4;background-color: #9f3e81" (click)="send()"
-                [disabled]="prods.length === 0 || client === ''">Enviar encargo
+                [disabled]="rosconArray.length === 0 || client === ''">Enviar encargo
         </button>
     </ng-container>
     <ng-template #elseBlock>
@@ -245,7 +243,7 @@
             Eliminar pedido
         </button>
         <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="updateOrder()"
-                [disabled]="prods.length === 0 || client === ''">
+                [disabled]="rosconArray.length === 0 || client === ''">
             Modificar pedido
         </button>
     </ng-template>

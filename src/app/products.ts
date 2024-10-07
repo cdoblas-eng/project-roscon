@@ -1,10 +1,3 @@
-export enum Type {
-  GR_NATA = 'GRANDE NATA',
-  GR_SIN = 'GRANDE SIN RELLENO',
-  PEQ_NATA = 'PEQUEÑO NATA',
-  PEQ_SIN = 'PEQUEÑO SIN RELLENO',
-  ESP = 'ESPECIAL',
-}
 
 export enum Size {
   GR = 'GRANDE',
@@ -17,45 +10,34 @@ export enum Fill {
   MERENGUE = 'MERENGUE',
   CREMA = 'CREMA',
   CAFE = 'CAFE',
-  EMPTY = 'SIN RELLENO',
+  EMPTY = 'SIN',
 }
 
-export interface Especial {
+export interface Roscon {
   size: Size;
   fill: Fill;
   half: Fill | null;
-}
-
-export interface Product{
-  roscontype: Type;
-  quantity: number;
   notes: string | null
-  especial: Especial | null;
+  quantity: number;
 }
 
-export const products = [
-  {
-    roscontype: Type.GR_NATA,
-    quantity: 1,
+export function newRoscon (size: Size, fill: Fill){
+  let getSize: Size = Size.GR;
+  let getFill: Fill = Fill.NATA;
+
+  if (size != Size.GR)
+    getSize = Size.PEQ
+
+  if(fill != Fill.NATA)
+    getFill = Fill.EMPTY
+
+  let roscon: Roscon = {
+    size: getSize,
+    fill: getFill,
+    half: null,
     notes: null,
-    especial: null,
-  },
-  {
-    roscontype: Type.GR_SIN,
-    quantity: 1,
-    notes: null,
-    especial: null,
-  },
-  {
-    roscontype: Type.PEQ_NATA,
-    quantity: 1,
-    notes: null,
-    especial: null,
-  },
-  {
-    roscontype: Type.PEQ_SIN,
-    quantity: 1,
-    notes: null,
-    especial: null,
-  },
-];
+    quantity: 1
+  }
+
+  return roscon;
+}
