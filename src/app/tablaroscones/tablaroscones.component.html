@@ -20,12 +20,15 @@
                 {{ column.name }}
             </option>
         </select>
+        <div class="align-content-center px-2">Especiales</div>
+        <div class="align-content-center px-2"><mat-slide-toggle [ngModel]="specialFilter"  (change)="changeSpecialFilter()"></mat-slide-toggle></div>
+        <div class="align-content-center px-2">Notas</div>
+        <div class="align-content-center px-2"><mat-slide-toggle [ngModel]="noteFilter"  (change)="changeNoteFilter()"></mat-slide-toggle></div>
 
-        <div class="align-content-center px-2"><mat-slide-toggle [ngModel]="specialFilter"  (change)="changeSpecialFilter()">Slide me!</mat-slide-toggle></div>
 
 
 
-<!--        sadasdsa<p class="text-uppercase text-center"><mat-slide-toggle>Toggle me!</mat-slide-toggle></p>-->
+        <!--        sadasdsa<p class="text-uppercase text-center"><mat-slide-toggle>Toggle me!</mat-slide-toggle></p>-->
     </div>
     <ngx-datatable
             class="material"

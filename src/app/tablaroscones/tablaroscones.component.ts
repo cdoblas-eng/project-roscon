@@ -27,6 +27,7 @@ export class TablarosconesComponent {
   filterValue : string = "";
   filterColumn : string = "";
   specialFilter: boolean = false;
+  noteFilter: boolean = false;
   columns = [
       { name: 'Cliente', prop: "client" },
       { name: 'Tamaño', prop: "size" },
@@ -68,11 +69,6 @@ export class TablarosconesComponent {
         // console.log(v);
         this.rows = v;
         this.temp = [...v];
-
-        // v.forEach(value => {
-        //   row
-        // })
-        // this.rows = v;
       },
       error: (e) => {
         //mostrar error en la busqueda
@@ -88,8 +84,22 @@ export class TablarosconesComponent {
   }
 
   changeSpecialFilter() {
+    this.noteFilter = false;
     this.specialFilter = !this.specialFilter;
     if (this.specialFilter) {
+      this.getSpecials();
+    }else{
+      this.getAllRoscones();
+    }
+  }
+
+  changeNoteFilter() {
+    this.noteFilter = !this.noteFilter;
+    if (this.noteFilter) {
+      this.rows = this.temp.filter(function (d) {
+        return d["notes"] != null && d["notes"] != "";
+      });
+    }else if(this.specialFilter){
       this.getSpecials();
     }else{
       this.getAllRoscones();

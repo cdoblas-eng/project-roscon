@@ -94,13 +94,5 @@ export class RosconesService {
       peqESP: number
     }>(url);
   }
-  // markAsUnsold(client: string, prods: Roscon[]): Observable<any[]> {
-  //   const headers = new HttpHeaders({
-  //     'Content-Type': 'application/json',
-  //   });
-  //
-  //   const url = `${this.serverUrl}/roscones/${client}`;
-  //   return this.http.put<any[]>(url, prods, { headers });
-  // }
 
 }

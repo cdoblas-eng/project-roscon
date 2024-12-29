@@ -1,6 +1,23 @@
-<!--</header>-->
+<ng-template #modalContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">{{modalTitle}}</h4>
+        <button type="button" class="close" (click)="closeModal(modal)">&times;</button>
+    </div>
+    <div class="modal-body">
+        <p>{{ modalMessage }}</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal(modal)">Cerrar</button>
+
+        <button *ngIf="deleteModal" type="button" class="btn btn-primary" (click)="onConfirm(modal)">Confirmar</button>
+    </div>
+</ng-template>
+
 
 <div class="container mt-4 mb-2" id="main-panel">
+
+
+    <!-- main-panel.component.html -->
     <div class="row">
         <div class="col-md-6 text-uppercase miborde" id="column-1">
             <!-- Primera Fila -->
@@ -15,7 +32,7 @@
                                 [(ngModel)]="client"
                         />
                     </label>
-                    <button type="button" [hidden]="updateOrderMode || client===''" (click)="search()"
+                    <button type="button" [hidden]="updateOrderMode || client===''" (click)="search(modalContent)"
                             class="btn-warning my-1 mx-2">
                         <i class="bi bi-search h4"></i>
                     </button>
@@ -185,53 +202,10 @@
 </div>
 
 
-<div
-        class="modal"
-        tabindex="-1"
-        role="dialog"
-        [ngStyle]="{ display: displayStyle }"
->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">{{ popupMessage }}</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click)="closePopup()">
-                    Cerrar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div
-        class="modal"
-        tabindex="-1"
-        role="dialog"
-        [ngStyle]="{ display: displayStyleError }"
->
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Ha habido un error del sistema, contacte con el administrador...</h4>
-            </div>
-            <div class="modal-footer">
-                <button
-                        type="button"
-                        class="btn btn-primary"
-                        (click)="closePopupError()"
-                >
-                    Cerrar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <footer class="text-center">
     <ng-container *ngIf="!updateOrderMode; else elseBlock">
-        <button class="btn" style="color: #e4e4e4;background-color: #9f3e81" (click)="send()"
+        <button class="btn" style="color: #e4e4e4;background-color: #9f3e81" (click)="send(modalContent)"
                 [disabled]="rosconArray.length === 0 || client === ''">Enviar encargo
         </button>
     </ng-container>
@@ -239,27 +213,51 @@
         <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="cancelUpdateMode()">
             Cancelar
         </button>
-        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="deleteOrder()">
+        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="deleteOrder(modalContent)">
             Eliminar pedido
         </button>
-        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="updateOrder()"
+        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="updateOrder(modalContent)"
                 [disabled]="rosconArray.length === 0 || client === ''">
             Modificar pedido
         </button>
-        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="markAsSold()"
-                [disabled]="rosconArray.length === 0 || client === ''">
-            Marcar como vendido
-        </button>
+        <ng-container *ngIf="!this.sold; else elseBlock">
+            <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="markAsSold(modalContent)"
+                    [disabled]="rosconArray.length === 0 || client === ''">
+                Marcar como vendido
+            </button>
+        </ng-container>
+        <ng-template #elseBlock>
+            <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="markAsUnsold(modalContent)"
+                    [disabled]="rosconArray.length === 0 || client === ''">
+                Marcar como no vendido
+            </button>
+        </ng-template>
+
     </ng-template>
 
-    <!--    <ng-container *ngIf="isConditionTrue; else elseBlock">-->
-    <!--        <p>La condición es verdadera.</p>-->
-    <!--    </ng-container>-->
-    <!--    <ng-template #elseBlock>-->
-    <!--        <p>La condición es falsa.</p>-->
-    <!--    </ng-template>-->
-    <!--    >-->
-
+    <div
+            class="modal"
+            tabindex="-1"
+            role="dialog"
+            [ngStyle]="{ display: displayStyleError }"
+    >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ha habido un error del sistema, contacte con el administrador...</h4>
+                </div>
+                <div class="modal-footer">
+                    <button
+                            type="button"
+                            class="btn btn-primary"
+                            (click)="closePopupError()"
+                    >
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </footer>
 

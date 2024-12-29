@@ -4,6 +4,8 @@ import {NgForm} from '@angular/forms';
 import {Fill, newRoscon, Roscon, Size} from '../products';
 import { HttpClient } from "@angular/common/http";
 import {RosconesService} from "../services/roscones.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+
 
 @Component({
     selector: 'app-mainpanel',
@@ -12,15 +14,44 @@ import {RosconesService} from "../services/roscones.service";
 })
 export class MainPanelComponent {
 
-    constructor(private http: HttpClient, private rosconesService: RosconesService) {
 
+    constructor(private http: HttpClient, private rosconesService: RosconesService, private modalService: NgbModal) { }
+
+    openModal(content: any) {
+        this.modalService.open(content, { centered: true });
+    }
+
+    closeModal(content: any) {
+        this.deleteModal = false;
+        this.modalService.dismissAll();
+    }
+
+    onConfirm(modal: any) {
+        // Lógica de confirmación
+        console.log('Acción confirmada');
+        //Formulario de confirmacion
+        this.rosconesService.deleteOrder(this.client).subscribe(
+            {
+                next: (v) => {
+                    // console.log(v)
+                },
+                error: (e) => {
+                    //mostrar error
+                    this.openPopupError()
+                    console.error(e)
+                },
+                complete: () => {
+                    this.clear()
+                }
+            }
+        )
+        modal.close('Confirmar');
     }
 
     client: string = ''; // Cliente, numero de telefono o dni
     enableSecondFill: boolean = false; // Estado de añadir segundo relleno por defecto false
     plusOrMinusButton: string = 'bi bi-plus-lg';
     rosconArray: Roscon[] = [];
-    total: string = '0,00€';
     main: boolean = false;
     displayStyle: string = 'none';
     displayStyleError: string = 'none';
@@ -36,11 +67,11 @@ export class MainPanelComponent {
     especialIns2: Fill | null = Fill.EMPTY;
     //Si el modo edicion de pedido esta activo se debe deshabilitar el campo cliente y cambiar botones de Enviar por Modificar y añadir boton de eliminar pedido
     updateOrderMode = false;
+    sold = false;
 
-    showModal: boolean = false;
     modalTitle: string = '';
     modalMessage: string = '';
-    modalIsError: boolean = false;
+    deleteModal: boolean = false;
 
     //Metodo auxiliar para la configuracion de los combobox de los rellenos especiales
     //De inicio nunca se podra añadir un roscon especial de nata, se habilitará la opcion cuando se habilite el segundo relleno
@@ -57,30 +88,6 @@ export class MainPanelComponent {
             this.fillValues =  Object.values(Fill).filter(value => value != this.especialIns2);
             this.fillValues2 = Object.values(Fill).filter(value => value != this.especialIns);
         }
-    }
-
-    showConfirmation() {
-        this.modalTitle = 'Confirm Action';
-        this.modalMessage = 'Are you sure you want to proceed?';
-        this.modalIsError = false;
-        this.showModal = true;
-    }
-
-    showError() {
-        this.modalTitle = 'Error';
-        this.modalMessage = 'An unexpected error occurred.';
-        this.modalIsError = true;
-        this.showModal = true;
-    }
-
-    onModalClose() {
-        this.showModal = false;
-    }
-
-    onModalConfirm() {
-        this.showModal = false;
-        // Perform the confirmed action
-        console.log('Action confirmed');
     }
 
     setActive(size: string) {
@@ -131,10 +138,9 @@ export class MainPanelComponent {
 
     decreaseQuantity(index: number) {
         this.rosconArray[index].quantity--;
-        if (this.rosconArray[index].quantity == 0) this.rosconArray.splice(index, 1);
-
-        // this.totals();
-        //console.log(this.prods);
+        if (this.rosconArray[index].quantity == 0) {
+            this.rosconArray.splice(index, 1);
+        }
     }
 
     openPopup(message: string) {
@@ -160,17 +166,17 @@ export class MainPanelComponent {
         this.enableSecondFill = false;
         this.plusOrMinusButton = 'bi bi-plus-lg';
         this.rosconArray = [];
-        this.total = '0,00€';
         this.main = false;
         this.activeSize = Size.GR.toString();
         this.updateOrderMode = false
+        this.deleteModal = false;
     }
 
     newSpecial(form: NgForm) {
         this.specialSize = form.controls['special-size'].value;
     }
 
-    send() {
+    send(content: any) {
         this.rosconesService.sendOrder(this.client, this.rosconArray).subscribe(
             {
                 next: (v) => console.log(v),
@@ -182,14 +188,16 @@ export class MainPanelComponent {
                 },
                 complete: () => {
                     //si esta vacio no encuentra nada
-                    console.info('complete')
-                    this.openPopup("El pedido ha sido enviado correctamente")
+                    this.modalTitle = "Pedido enviado al sistema"
+                    this.modalMessage = "El pedido ha sido enviado correctamente"
+                    this.openModal(content);
+                    this.clear();
                 }
             })
 
     }
 
-    search() {
+    search(content: any) {
         //hacer peticion a servidor
         this.rosconesService.getRoscones(this.client).subscribe({
             next: (v) => {
@@ -197,13 +205,16 @@ export class MainPanelComponent {
                 if (Object.keys(v).length != 0) {
                     v.forEach(roscon => {
                         console.log(roscon)
-                        // this.rosconesService.addSpecialFields(roscon);
                     })
                     this.rosconArray = v;
-                    // console.log(this.prods);
+                    console.log(v);
                     this.updateOrderMode = true;
+                    this.sold = v[0].vendido == "TRUE";
+
                 } else { // si no encuentra el cliente
-                    this.openPopup(`El cliente: ${this.client} no existe en el sistema`)
+                    this.modalTitle = "No se encuentra al cliente"
+                    this.modalMessage = `El cliente: ${this.client} no existe en el sistema`
+                    this.openModal(content);
                 }
             },
             error: (e) => {
@@ -215,22 +226,6 @@ export class MainPanelComponent {
                 console.info('get roscones request complete')
             }
         })
-
-
-        // //.subscribe(
-        // data => this.prods = data,
-        // error => console.log("wachin")
-        // );
-        // this.rosconesService.getRoscones(this.client).subscribe(
-        //     (data) => {
-        //       this.prods = data;
-        //       console.log('Datos obtenidos:', this.prods);
-        //     }
-        // );
-        //si encuentro el cliente
-
-        //si no encuento el cliente
-        // this.updateOrderMode = false;
     }
 
     //Funcion utilizada en los botones para salir del modo busqueda
@@ -239,7 +234,7 @@ export class MainPanelComponent {
         this.clear();
     }
 
-    updateOrder() {
+    updateOrder(content: any) {
         this.rosconesService.modifyOrder(this.client, this.rosconArray).subscribe(
             {
                 error: (e) => {
@@ -248,63 +243,54 @@ export class MainPanelComponent {
                     console.error(e)
                 },
                 complete: () => {
-                    this.openPopup("El pedido ha sido modificado correctamente")
+                    this.modalTitle = "Confirmación"
+                    this.modalMessage = "El pedido ha sido modificado correctamente"
+                    this.openModal(content);
+                    this.clear();
                 }
             }
         )
     }
 
-    markAsSold() {
+    markAsSold(content: any) {
         this.rosconesService.markAsSold(this.client).subscribe(
             {
                 error: (e) => {
-                    //mostrar error
                     this.openPopupError()
                     console.error(e)
                 },
                 complete: () => {
-                    this.openPopup("El pedido se ha establecido como vendido")
+                    this.modalTitle = "Confirmación"
+                    this.modalMessage = "El pedido se ha establecido como vendido"
+                    this.openModal(content);
+                    this.clear();
                 }
             }
         )
     }
 
-    markAsUnsold() {
-        this.rosconesService.markAsSold(this.client).subscribe(
+    markAsUnsold(content: any) {
+        this.rosconesService.markAsUnsold(this.client).subscribe(
             {
                 error: (e) => {
-                    //mostrar error
                     this.openPopupError()
                     console.error(e)
                 },
                 complete: () => {
-                    this.openPopup("El pedido se ha establecido como vendido")
+                    this.modalTitle = "Confirmación"
+                    this.modalMessage = "El pedido se ha establecido como no vendido"
+                    this.openModal(content);
+                    this.clear();
                 }
             }
         )
     }
 
-    deleteOrder() {
-        //Formulario de confirmacion
-
-        //peticion a servidor eliminando el cliente x
-        this.rosconesService.deleteOrder(this.client).subscribe(
-            {
-                next: (v) => {
-                    // console.log(v)
-                },
-                error: (e) => {
-                    //mostrar error
-                    this.openPopupError()
-                    console.error(e)
-                },
-                complete: () => {
-                    this.openPopup("El pedido ha sido eliminado del sistema")
-                }
-            }
-        )
-
-        this.clear()
+    deleteOrder(content: any) {
+        this.modalTitle = "Confirmación borrar pedido"
+        this.modalMessage = "¿Está seguro de que deseas eliminar este pedido? Esta acción no se puede deshacer"
+        this.deleteModal = true;
+        this.openModal(content);
     }
 
     protected readonly Size = Size;

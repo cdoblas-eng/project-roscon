@@ -23,15 +23,7 @@ body {
 .btn-group .radio-hidden {
   display: none;
 }
-/*<ngx-datatable class="material">*/
-/*@import '~@swimlane/ngx-datatable/index.css';*/
-/*@import '~@swimlane/ngx-datatable/themes/material.scss';*/
-/*@import '~@swimlane/ngx-datatable/assets/icons.css';*/
-/*
-Copyright Google LLC. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at https://angular.io/license
-*/
+
 @import 'node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss';
 @import 'node_modules/@swimlane/ngx-datatable/themes/material.scss';
 @import 'node_modules/@swimlane/ngx-datatable/index.css';
@@ -39,3 +31,11 @@ can be found in the LICENSE file at https://angular.io/license
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.modal {
+  z-index: 1050 !important; /* Valor más alto que el del backdrop */
+}
+
+.modal-backdrop {
+  z-index: 1040 !important; /* Valor por defecto, un poco más bajo que el modal */
+}
