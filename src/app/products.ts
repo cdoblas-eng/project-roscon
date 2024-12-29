@@ -6,11 +6,15 @@ export enum Size {
 
 export enum Fill {
   NATA = 'NATA',
+  TRUFA = 'TRUFA',
+  CABELLO = 'CABELLO DE ANGEL',
+  NOCILLA= 'NOCILLA',
   MOCA = 'MOCA',
   MERENGUE = 'MERENGUE',
-  CREMA = 'CREMA',
-  CAFE = 'CAFE',
-  EMPTY = 'SIN',
+  CREMA = 'CREMA BLANCA',
+  CREMA_CHOCO = 'CREMA CHOCO',
+  NATA_TURRON= 'NATA TURRON',
+  EMPTY = 'SIN RELLENO',
 }
 
 export interface Roscon {

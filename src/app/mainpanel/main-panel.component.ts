@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {NgForm} from '@angular/forms';
 
 import {Fill, newRoscon, Roscon, Size} from '../products';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {RosconesService} from "../services/roscones.service";
 
 @Component({
@@ -26,7 +26,7 @@ export class MainPanelComponent {
     displayStyleError: string = 'none';
     popupMessage: string = "";
     //Valores de enumerados
-    fillValues: Fill[]= Object.values(Fill).filter(value => value != Fill.NATA);
+    fillValues: Fill[]= Object.values(Fill).filter(value => value != Fill.NATA && value != Fill.EMPTY);
     fillValues2: Fill[]= [];
 
     sizeValues = Object.values(Size);
@@ -48,8 +48,9 @@ export class MainPanelComponent {
     getFillValues(){
         // Si no se encuentra habilitado el relleno 2
         if (!this.enableSecondFill){
-            this.fillValues = Object.values(Fill).filter(value => value != Fill.NATA);
+            this.fillValues = Object.values(Fill).filter(value => value != Fill.NATA && value != Fill.EMPTY);
             this.especialIns = this.especialIns == Fill.NATA ? Fill.CREMA : this.especialIns;
+            this.especialIns = this.especialIns == Fill.EMPTY ? Fill.CREMA : this.especialIns;
             this.especialIns2 = this.especialIns == this.especialIns2 ? Fill.NATA : this.especialIns2;
         }
         else{
@@ -247,7 +248,37 @@ export class MainPanelComponent {
                     console.error(e)
                 },
                 complete: () => {
-                    this.openPopup("El pedido ha modificado correctamente")
+                    this.openPopup("El pedido ha sido modificado correctamente")
+                }
+            }
+        )
+    }
+
+    markAsSold() {
+        this.rosconesService.markAsSold(this.client).subscribe(
+            {
+                error: (e) => {
+                    //mostrar error
+                    this.openPopupError()
+                    console.error(e)
+                },
+                complete: () => {
+                    this.openPopup("El pedido se ha establecido como vendido")
+                }
+            }
+        )
+    }
+
+    markAsUnsold() {
+        this.rosconesService.markAsSold(this.client).subscribe(
+            {
+                error: (e) => {
+                    //mostrar error
+                    this.openPopupError()
+                    console.error(e)
+                },
+                complete: () => {
+                    this.openPopup("El pedido se ha establecido como vendido")
                 }
             }
         )

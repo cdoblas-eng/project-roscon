@@ -8,8 +8,8 @@
                 <div class="col-md-12 d-flex align-items-center justify-content-center">
                     <label class="m-1">
                         <input
-                                type="text"
-                                placeholder="Tlf/Dni cliente"
+                                type="number"
+                                placeholder="Numero de telefono del cliente"
                                 class="form-control"
                                 [disabled]="updateOrderMode"
                                 [(ngModel)]="client"
@@ -85,7 +85,7 @@
                 </div>
                 <div class="col-md-12  d-flex align-items-center justify-content-center">
                     <label class="m-1">
-                        <select [(ngModel)]="especialIns" (change)="getFillValues()" name="special-ins" id="special-ins"
+                        <select [(ngModel)]="especialIns" (change)="getFillValues()"  name="special-ins" id="special-ins"
                                 class="form-control text-uppercase text-center">
                             <option value="" disabled selected>Relleno Especial</option>
                             <option
@@ -116,7 +116,7 @@
                 </div>
 
                 <div class="col-md-12  d-flex align-items-center justify-content-center">
-                    <button (click)="addEspecial()" class="btn btn-warning m-1">Añadir especial</button>
+                    <button (click)="addEspecial()" [disabled]="especialIns == null" class="btn btn-warning m-1">Añadir especial</button>
                 </div>
             </div>
 
@@ -245,6 +245,10 @@
         <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="updateOrder()"
                 [disabled]="rosconArray.length === 0 || client === ''">
             Modificar pedido
+        </button>
+        <button class="btn mx-2" style="color: #e4e4e4;background-color: #9f3e81;" (click)="markAsSold()"
+                [disabled]="rosconArray.length === 0 || client === ''">
+            Marcar como vendido
         </button>
     </ng-template>
 

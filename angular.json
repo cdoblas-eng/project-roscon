@@ -10,6 +10,7 @@
 			"prefix": "app",
 			"architect": {
 				"build": {
+
 					"builder": "@angular-devkit/build-angular:browser",
 					"options": {
 						"outputPath": "dist",
@@ -24,10 +25,11 @@
 							"src/assets"
 						],
 						"styles": [
-							"node_modules/bootstrap/dist/css/bootstrap.min.css",
-							"node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss",
-							"src/styles.scss"
-						],
+              "@angular/material/prebuilt-themes/magenta-violet.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss",
+              "src/styles.scss"
+            ],
 						"scripts": [
 							"node_modules/jquery/dist/jquery.min.js",
 							"node_modules/bootstrap/dist/js/bootstrap.min.js"
@@ -39,12 +41,12 @@
 								{
 									"type": "initial",
 									"maximumWarning": "500kb",
-									"maximumError": "1mb"
+									"maximumError": "5mb"
 								},
 								{
 									"type": "anyComponentStyle",
-									"maximumWarning": "2kb",
-									"maximumError": "4kb"
+									"maximumWarning": "10kb",
+									"maximumError": "100kb"
 								}
 							],
 							"outputHashing": "all"
@@ -59,7 +61,7 @@
 						}
 					},
 					"defaultConfiguration": "production"
-				},
+                },
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
@@ -91,8 +93,9 @@
 							"src/assets"
 						],
 						"styles": [
-							"src/styles.scss"
-						],
+              "@angular/material/prebuilt-themes/magenta-violet.css",
+              "src/styles.scss"
+            ],
 						"scripts": []
 					}
 				},
