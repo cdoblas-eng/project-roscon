@@ -179,7 +179,12 @@ export class MainPanelComponent {
     send(content: any) {
         this.rosconesService.sendOrder(this.client, this.rosconArray).subscribe(
             {
-                next: (v) => console.log(v),
+                next: (response:any) => {
+                    //si esta vacio no encuentra nada
+                    this.modalTitle = "Pedido enviado al sistema"
+                    this.modalMessage = `El número del pedido realizado es: ${response.numeroCliente}`;
+                    console.log(response)
+                },
                 error: (e) => {
                     //mostrar error en la busqueda
                     console.error(e)
@@ -187,9 +192,6 @@ export class MainPanelComponent {
                     //popup error de la peticion
                 },
                 complete: () => {
-                    //si esta vacio no encuentra nada
-                    this.modalTitle = "Pedido enviado al sistema"
-                    this.modalMessage = "El pedido ha sido enviado correctamente"
                     this.openModal(content);
                     this.clear();
                 }

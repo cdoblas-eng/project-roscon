@@ -7,7 +7,7 @@ import {Roscon} from "../products";
   providedIn: 'root'
 })
 export class RosconesService {
-  // private serverUrl = 'http://192.168.1.106'; // Cambia la URL si tu servidor Node.js está en otro puerto o dominio
+  // private serverUrl = 'http://192.168.10.123'; // Cambia la URL si tu servidor Node.js está en otro puerto o dominio
   private serverUrl = 'http://localhost'; // Cambia la URL si tu servidor Node.js está en otro puerto o dominio
   constructor(private http: HttpClient) { }
 
@@ -32,7 +32,7 @@ export class RosconesService {
     });
 
     const url = `${this.serverUrl}/roscones/${client}`;
-    return this.http.post<any[]>(url, prods, { headers });
+    return this.http.post<any[]>(url, prods, { headers});
   }
 
   deleteOrder(client: string): Observable<any[]> {
