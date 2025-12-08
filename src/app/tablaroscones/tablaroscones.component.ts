@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {RosconesService} from "../services/roscones.service";
 import {NgForOf} from "@angular/common";
+import { CommonModule } from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
@@ -15,7 +16,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     NgForOf,
     ReactiveFormsModule,
     FormsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    CommonModule
   ],
   templateUrl: './tablaroscones.component.html',
   styleUrl: './tablaroscones.component.scss'
@@ -23,19 +25,20 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 export class TablarosconesComponent {
   rows: any[] = [];
   temp: any[] = []
-  rosconService:RosconesService;
+  rosconService : RosconesService;
   filterValue : string = "";
   filterColumn : string = "";
   specialFilter: boolean = false;
   noteFilter: boolean = false;
   columns = [
+      { name: 'Numero pedido', prop: "num_pedido" },
       { name: 'Cliente', prop: "client" },
       { name: 'Tamaño', prop: "size" },
       { name: 'Relleno', prop: "fill" },
       { name: 'Mitad', prop: "half" },
       { name: 'Cantidad', prop: "quantity" },
       { name: 'Notas', prop: "notes" },
-      { name: 'Vendido', prop: "vendido" },
+      { name: 'Entregado', prop: "vendido" },
       { name: 'Fecha', prop: "timestamp" }];
 
   constructor(rosconService: RosconesService) {
@@ -135,8 +138,17 @@ export class TablarosconesComponent {
     const filterValue = this.filterValue;
     const filterColumn = this.filterColumn;
     this.rows = this.temp.filter(function (d) {
-      const tableValue : string = d[filterColumn] != null ? d[filterColumn].toLowerCase() : "";
+      const tableValue : string = d[filterColumn] != null ? String(d[filterColumn]) : "";
       return tableValue.indexOf(filterValue) !== -1 || !filterValue;
     });
+  }
+  isVendido(value: any): boolean {
+    if (value === true || value === 1) return true;
+    if (value === false || value === 0 || value === null || value === undefined) return false;
+    if (typeof value === 'string') {
+      const v = value.trim().toLowerCase();
+      return v === 'true' || v === '1' || v === 'si' || v === 'sí' || v === 'entregado';
+    }
+    return Boolean(value);
   }
 }

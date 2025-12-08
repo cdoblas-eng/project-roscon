@@ -2,3 +2,11 @@
 @import 'node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss';
 @import 'node_modules/@swimlane/ngx-datatable/index.css';
 @import 'node_modules/@swimlane/ngx-datatable/assets/icons.css';
+.vendido-true {
+  color: #2e7d32; /* verde */
+  font-weight: 600;
+}
+.vendido-false {
+  color: #c62828; /* rojo */
+  opacity: 0.9;
+}

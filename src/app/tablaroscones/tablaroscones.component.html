@@ -24,11 +24,6 @@
         <div class="align-content-center px-2"><mat-slide-toggle [ngModel]="specialFilter"  (change)="changeSpecialFilter()"></mat-slide-toggle></div>
         <div class="align-content-center px-2">Notas</div>
         <div class="align-content-center px-2"><mat-slide-toggle [ngModel]="noteFilter"  (change)="changeNoteFilter()"></mat-slide-toggle></div>
-
-
-
-
-        <!--        sadasdsa<p class="text-uppercase text-center"><mat-slide-toggle>Toggle me!</mat-slide-toggle></p>-->
     </div>
     <ngx-datatable
             class="material"
@@ -40,5 +35,17 @@
             [rowHeight]="'auto'"
             [limit]="8"
     >
+        <ngx-datatable-column *ngFor="let col of columns" [name]="col.name" [prop]="col.prop">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value" let-col="column">
+                <ng-container *ngIf="col.prop === 'vendido'">
+                    <span [ngClass]="{ 'vendido-true': isVendido(value), 'vendido-false': !isVendido(value) }">
+                      {{ isVendido(value) ? 'Entregado' : 'Pendiente' }}
+                    </span>
+                </ng-container>
+                <ng-container *ngIf="col.prop !== 'vendido'">
+                    {{ value }}
+                </ng-container>
+            </ng-template>
+        </ngx-datatable-column>
     </ngx-datatable>
 </div>

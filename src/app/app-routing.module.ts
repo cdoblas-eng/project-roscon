@@ -5,8 +5,7 @@ import {TablarosconesComponent} from "./tablaroscones/tablaroscones.component";
 import {EstadisticasComponent} from "./estadisticas/estadisticas.component";
 
 const routes: Routes = [
-    { path: '', redirectTo: '/main', pathMatch: 'full' },
-    { path: 'main', component: MainPanelComponent },
+    { path: '', component: MainPanelComponent },
     { path: 'table', component: TablarosconesComponent },
     { path: 'stadistics', component: EstadisticasComponent }
 ];

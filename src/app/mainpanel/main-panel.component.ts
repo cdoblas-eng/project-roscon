@@ -13,8 +13,6 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
     styleUrls: ['./main-panel.component.scss'],
 })
 export class MainPanelComponent {
-
-
     constructor(private http: HttpClient, private rosconesService: RosconesService, private modalService: NgbModal) { }
 
     openModal(content: any) {
@@ -205,6 +203,12 @@ export class MainPanelComponent {
             next: (v) => {
                 //si encuentra roscones
                 if (Object.keys(v).length != 0) {
+                    if (v[0].vendido == "TRUE"){
+                        this.modalTitle = "El pedido ya ha sido vendido"
+                        this.modalMessage = `El pedido del cliente: ${this.client} ya ha sido vendido`
+                        this.openModal(content);
+                    }
+
                     v.forEach(roscon => {
                         console.log(roscon)
                     })
